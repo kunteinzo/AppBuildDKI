@@ -19,7 +19,7 @@ async def ck(token: Annotated[str, Depends(oauth)]):
         raise HTTPException(401, str(e))
 
 
-@app.get("thekey")
+@app.get("/thekey")
 def index():
     return jwt.encode(
         dict(
