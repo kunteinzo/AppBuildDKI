@@ -21,14 +21,14 @@ async def ck(token: Annotated[str, Depends(oauth)]):
 
 @app.get("/thekey")
 def index():
-    return jwt.encode(
+    return dict(token=jwt.encode(
         dict(
             uid=1000,
             exp=datetime.now(timezone.utc) + timedelta(minutes=2)
             ),
         "secret",
-        algorithms="HS512"
-    )
+        algorithm="HS512"
+    ))
 
 
 @app.post("/build")
