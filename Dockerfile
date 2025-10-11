@@ -9,7 +9,7 @@ COPY *.sh .
 
 RUN apt-get update
 RUN apt-get install openjdk-21-jdk wget unzip python3 python3-venv python3-pip -y
-RUN python3 -m venv
+RUN python3 -m venv .venv
 RUN .venv/bin/pip install -U pip 'fastapi[standard]' pyjwt python-multipart
 RUN mkdir -p Android/Sdk/cmdline-tools/latest
 RUN wget -O cmd.zip "https://dl.google.com/android/repository/commandlinetools-linux-13114758_latest.zip" 
