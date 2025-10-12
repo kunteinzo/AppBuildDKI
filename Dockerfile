@@ -18,3 +18,4 @@ RUN echo "export ANDROID_HOME=\$HOME/Android/Sdk" >> .bashrc
 RUN echo "export PATH=\$PATH:\$ANDROID_HOME/cmdline-tools/latest/bin" >> .bashrc
 
 EXPOSE 8000
+EXPOSE 8022
