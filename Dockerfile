@@ -8,7 +8,7 @@ COPY *.py Api/
 COPY *.sh .
 
 RUN apt-get update
-RUN apt-get install openjdk-21-jdk wget unzip python3 python3-venv python3-pip ssh -y
+RUN apt-get install openjdk-21-jdk wget zip unzip python3 python3-venv python3-pip ssh -y
 RUN python3 -m venv .venv
 RUN .venv/bin/pip install -U pip 'fastapi[standard]' pyjwt python-multipart
 RUN mkdir -p Android/Sdk/cmdline-tools/latest
@@ -19,3 +19,5 @@ RUN echo "export PATH=\$PATH:\$ANDROID_HOME/cmdline-tools/latest/bin" >> .bashrc
 
 EXPOSE 8000
 EXPOSE 8022
+
+CMD ["/bin/bash", "run.sh"]

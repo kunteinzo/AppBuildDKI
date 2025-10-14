@@ -58,17 +58,16 @@ def build(type: str, file: UploadFile, token: Annotated[dict, Depends(ck)]):
 @app.post("/uploadBuild")
 def upload_build(file: UploadFile, token: Annotated[dict, Depends(ck)]):
     check()
-    with open(f"{PJ_DIR}/{file.filename}", "wb") as f:
-        while len(b:=file.file.read(1024)) > 0:
-            f.write(b)
-    res = cmd(["unzip", "-o", f"{PJ_DIR}/{file.filename}", "-d", f"{PJ_DIR}"])
-    PJD = f"{PJ_DIR}/{file.filename[:-4]}"
-    cmd(["chmod", "+x", f"{PJD}/gradlew"])
-    #cmd(["cd", PJD, "&&", "./gradlew", "assemble"])
-    zip_name = file.filename
     try:
-        #res = os.listdir(PJD)
-        cmd(["zip", "-r", 'z', zip_name, '.'], cwd=PJD)
+        with open(f"{PJ_DIR}/{file.filename}", "wb") as f:
+            while len(b:=file.file.read(1024)) > 0:
+                f.write(b)
+        cmd(["unzip", "-o", file.filename, "-d", f"{PJ_DIR}"], PJ_DIR)
+        PJD = f"{PJ_DIR}/{file.filename[:-4]}"
+        cmd(["chmod", "+x", "gradlew"], PJD)
+        cmd(["./gradlew", "assemble"], PJD)
+        zip_name = file.filename
+        cmd(["zip", "-r", 'z', zip_name, '.'], PJD+APK_PATH)
     except Exception as e:
         raise HTTPException(500, str(e))
-    return FileResponse(f"{PJD}/{zip_name}")
+    return FileResponse(f"{PJD+APK_PATH}/{zip_name}")
