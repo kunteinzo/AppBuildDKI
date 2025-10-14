@@ -17,10 +17,10 @@ def check():
         os.mkdir(PJ_DIR)
 
 
-def cmd(cmd: list|str):
+def cmd(cmd: list|str, cwd: str|None = None):
     return subprocess.run(
         cmd,
-        capture_output=True, text=True
+        cwd=cwd, capture_output=True, text=True
     )
 
 
@@ -61,10 +61,14 @@ def upload_build(file: UploadFile, token: Annotated[dict, Depends(ck)]):
     with open(f"{PJ_DIR}/{file.filename}", "wb") as f:
         while len(b:=file.file.read(1024)) > 0:
             f.write(b)
-    res = cmd(["unzip", "-o", "-K", f"{HOME}/{file.filename}", "-d", f"{PJ_DIR}"])
+    res = cmd(["unzip", "-o", f"{PJ_DIR}/{file.filename}", "-d", f"{PJ_DIR}"])
     PJD = f"{PJ_DIR}/{file.filename[:-4]}"
     cmd(["chmod", "+x", f"{PJD}/gradlew"])
     #cmd(["cd", PJD, "&&", "./gradlew", "assemble"])
-    zip_name = f"{file.filename[:-4]}.zip",
-    cmd(["cd", PJD, "&&", "zip", "-r", zip_name, "*"])
-    return FileResponse(PJD+'/'+zip_name)
+    zip_name = file.filename
+    try:
+        #res = os.listdir(PJD)
+        cmd(["zip", "-r", 'z', zip_name, '.'], cwd=PJD)
+    except Exception as e:
+        raise HTTPException(500, str(e))
+    return FileResponse(f"{PJD}/{zip_name}")
