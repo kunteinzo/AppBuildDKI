@@ -20,4 +20,3 @@ RUN echo "export PATH=\$PATH:\$ANDROID_HOME/cmdline-tools/latest/bin" >> .bashrc
 EXPOSE 8000
 EXPOSE 8022
 
-CMD ["/bin/bash", "run.sh"]
